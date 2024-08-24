@@ -7,10 +7,11 @@ import { useFormState } from 'react-dom';
 import { useRef } from 'react';
 
 type AddTaskFormProps = {
+  goalId: number;
   action: Action<Task>;
 };
 
-export default function AddTaskForm({ action }: AddTaskFormProps) {
+export default function AddTaskForm({ goalId, action }: AddTaskFormProps) {
   const [state, formAction] = useFormState(action, {});
   const ref = useRef<HTMLFormElement>(null);
 
@@ -20,13 +21,19 @@ export default function AddTaskForm({ action }: AddTaskFormProps) {
   };
 
   return (
-    <form action={handleSubmit} className="mt-4 rounded bg-slate-200 p-2">
-      <div className="flex items-center justify-between gap-4">
+    <form action={handleSubmit} className="max-w-screen-md">
+      <div className="flex items-center justify-between gap-4 py-4">
+        <input type="hidden" name="goalId" value={goalId} />
         <input
           name="title"
           type="text"
           placeholder="New task"
-          className="w-full rounded border p-2"
+          className="w-full rounded border border-slate-400 p-2"
+        />
+        <input
+          name="deadline"
+          type="date"
+          className="rounded border border-slate-400 p-2"
         />
         <Submit content="Add" loadingText="Adding..." />
       </div>

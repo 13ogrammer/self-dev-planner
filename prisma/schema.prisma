@@ -31,23 +31,12 @@ model Goal {
 }
 
 model Task {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   title     String
-  content   String?
-  completed Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  goal      Goal     @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  deadline  DateTime?
+  completed Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  goal      Goal      @relation(fields: [goalId], references: [id], onDelete: Cascade)
   goalId    Int
-  notes     Note[]
-}
-
-model Note {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
-  taskId    Int
 }

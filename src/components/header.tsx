@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation';
 const siteRoutes = [
   { href: '/goals', label: 'Goals' },
   { href: '/tasks', label: 'Tasks' },
-  { href: '/notes', label: 'Notes' },
   { href: '/settings/segments', label: 'Settings' },
 ];
 
@@ -23,7 +22,7 @@ export default function Header() {
           <li key={route.href}>
             <Link
               href={route.href}
-              className={`text-zinc-400 transition ${pathname === route.href ? 'text-zinc-900' : ''}`}
+              className={`text-zinc-400 transition ${pathname.startsWith(route.href) ? 'text-zinc-900' : ''}`}
             >
               {route.label}
             </Link>

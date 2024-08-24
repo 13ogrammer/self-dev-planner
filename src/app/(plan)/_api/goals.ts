@@ -2,12 +2,28 @@
 
 import type { ActionResponse } from '@/app/types';
 import type { Goal } from '@prisma/client';
+import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
 export const getGoals = async () => {
-  return await prisma.goal.findMany();
+  return await prisma.goal.findMany({ include: { segment: true } });
+};
+
+export const getGoal = async (id: number) => {
+  const goal = await prisma.goal.findUnique({
+    where: { id },
+    include: {
+      segment: true,
+      tasks: {
+        orderBy: { deadline: 'asc' },
+      },
+    },
+  });
+  if (!goal) notFound();
+
+  return goal;
 };
 
 export const createGoal = async (
@@ -38,13 +54,7 @@ export const createGoal = async (
     });
     if (!segment) throw new Error('Segment not found');
 
-    const goal = await prisma.goal.create({
-      data: {
-        segmentId: data.segmentId,
-        name: data.name,
-        deadline: data.deadline,
-      },
-    });
+    const goal = await prisma.goal.create({ data });
 
     revalidatePath('/goals');
 
