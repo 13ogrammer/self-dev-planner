@@ -1,5 +1,5 @@
 import Task from '@/components/Task';
-import { createTask, getTasks } from '../api/tasks';
+import { createTask, getTasks } from '../_api/tasks';
 import AddTaskForm from '@/components/AddTaskForm';
 
 export default async function Tasks() {

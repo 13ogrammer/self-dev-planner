@@ -2,6 +2,7 @@
 
 import { db } from '@/lib/db'
 import { revalidatePath } from 'next/cache'
+import { notFound } from 'next/navigation'
 
 export const getTasks = async () => {
   return await db.task.findMany()
@@ -10,7 +11,7 @@ export const getTasks = async () => {
 export const toggleTask = async ({ id }: { id: number }) => {
   const task = await db.task.findFirst({ where: { id } })
   if (!task) {
-    throw new Error('Task not found')
+    notFound()
   }
 
   await db.task.update({

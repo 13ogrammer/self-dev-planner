@@ -1,6 +1,6 @@
 'use client'
 
-import { toggleTask } from "@/app/api/tasks"
+import { toggleTask } from "@/app/(plan)/_api/tasks"
 import { Task as TaskType } from "@prisma/client"
 
 type TaskProps = {
