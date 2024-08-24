@@ -1,20 +1,20 @@
 'use server'
 
-import { db } from '@/lib/db'
+import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { notFound } from 'next/navigation'
 
 export const getTasks = async () => {
-  return await db.task.findMany()
+  return await prisma.task.findMany()
 }
 
 export const toggleTask = async ({ id }: { id: number }) => {
-  const task = await db.task.findFirst({ where: { id } })
+  const task = await prisma.task.findFirst({ where: { id } })
   if (!task) {
     notFound()
   }
 
-  await db.task.update({
+  await prisma.task.update({
     where: { id },
     data: { completed: !task.completed },
   })
@@ -23,9 +23,11 @@ export const toggleTask = async ({ id }: { id: number }) => {
 }
 
 export const createTask = async (formData: FormData) => {
+  const goalId = Number(formData.get('goalId') as string)
   const title = formData.get('title') as string
+  const content = formData.get('content') as string
 
-  await db.task.create({ data: { title } })
+  await prisma.task.create({ data: { goalId, title, content } })
 
   revalidatePath('/tasks')
 }
