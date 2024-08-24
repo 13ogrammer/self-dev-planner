@@ -4,8 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const siteRoutes = [
+  { href: "/goals", label: "Goals" },
   { href: "/tasks", label: "Tasks" },
-  { href: "/notes", label: "Notes" }
+  { href: "/notes", label: "Notes" },
+  { href: "/settings/segments", label: "Settings" },
 ]
 
 export default function Header() {
