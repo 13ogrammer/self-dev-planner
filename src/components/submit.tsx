@@ -1,15 +1,20 @@
 import { useFormStatus } from 'react-dom';
 
-export default function Submit({ content }: { content: string }) {
+type SubmitProps = {
+  content: string;
+  loadingText: string;
+};
+
+export default function Submit({ content, loadingText }: SubmitProps) {
   const { pending } = useFormStatus();
 
   return (
     <button
       type="submit"
-      disabled={pending}
+      aria-disabled={pending}
       className="rounded bg-blue-500 p-2 text-white transition disabled:bg-blue-200"
     >
-      {content}
+      {pending ? loadingText : content}
     </button>
   );
 }

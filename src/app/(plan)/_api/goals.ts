@@ -1,23 +1,55 @@
-import { prisma } from '@/lib/prisma'
+'use server';
+
+import type { ActionResponse } from '@/app/types';
+import type { Goal } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
+import { revalidatePath } from 'next/cache';
+import { z } from 'zod';
 
 export const getGoals = async () => {
-  return await prisma.goal.findMany()
-}
+  return await prisma.goal.findMany();
+};
 
-export const createGoal = async (formData: FormData) => {
-  const segmentId = Number(formData.get('segmentId') as string)
-  const segment = await prisma.segment.findUnique({ where: { id: segmentId } })
+export const createGoal = async (
+  prevState: any,
+  formData: FormData
+): Promise<ActionResponse<Goal>> => {
+  const schema = z.object({
+    segmentId: z.coerce.number(),
+    name: z.string(),
+    deadline: z.coerce.date(),
+  });
 
-  if (!segment) {
-    throw new Error('Segment not found')
+  const parsedData = schema.safeParse({
+    segmentId: formData.get('segmentId'),
+    name: formData.get('name'),
+    deadline: formData.get('deadline'),
+  });
+
+  if (!parsedData.success) {
+    return { success: false, message: 'Invalid data.' };
   }
 
-  const name = formData.get('name') as string
-  const deadline = formData.get('deadline') as string
+  const { data } = parsedData;
 
-  return await prisma.goal.create({
-    data: {
-      segmentId, name, deadline
-    }
-  })
-}
+  try {
+    const segment = await prisma.segment.findUnique({
+      where: { id: data.segmentId },
+    });
+    if (!segment) throw new Error('Segment not found');
+
+    const goal = await prisma.goal.create({
+      data: {
+        segmentId: data.segmentId,
+        name: data.name,
+        deadline: data.deadline,
+      },
+    });
+
+    revalidatePath('/goals');
+
+    return { success: true, message: 'Goal created successfully.', data: goal };
+  } catch (error) {
+    return { success: false, message: 'Failed to create the goal.' };
+  }
+};
