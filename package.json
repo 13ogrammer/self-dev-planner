@@ -2,6 +2,7 @@
   "name": "self-dev-planner",
   "version": "0.1.0",
   "private": true,
+  "author": "13ogrammer<tasker.prabhat@gmail.com>",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
