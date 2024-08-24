@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef } from "react"
-import SubmitButton from "../SubmitButton"
+import Submit from "./submit"
 
 type AddTaskFormProps = {
   onSubmit: (formData: FormData) => Promise<void>
@@ -26,7 +26,7 @@ export default function AddTaskForm({ onSubmit }: AddTaskFormProps) {
         placeholder="New task"
         className="p-2 border rounded w-full"
       />
-      <SubmitButton content="Add" />
+      <Submit content="Add" />
     </form>
   )
 }
